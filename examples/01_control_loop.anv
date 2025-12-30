@@ -1,0 +1,25 @@
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+-- Anvomidav Control Loop Example
+
+-- Real-time task with WCET and deadline annotations
+@wcet(50us)
+@deadline(100us)
+@period(1ms)
+task ControlLoop:
+    fn execute(sensors: &SensorData) -> ControlOutput:
+        let reading = sensors.read()
+        let output = pid_controller(reading)
+        output
+
+-- Prove timing requirements
+@proves(wcet <= deadline)
+
+-- Task set with schedulability proof
+@schedulable
+task_set ControlSystem:
+    task sensor_read:  period=10ms,  wcet=1ms
+    task compute:      period=50ms,  wcet=10ms
+    task actuate:      period=100ms, wcet=5ms
+
+    -- Prove schedulability under rate-monotonic
+    @proves(rm_schedulable(tasks))

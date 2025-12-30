@@ -1,0 +1,70 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+= Contributing to Anvomidav Playground
+
+== Getting Started
+
+1. Fork the repository
+2. Create a feature branch from `main`
+3. Sign off commits (`git commit -s`)
+4. Submit a pull request
+
+== Development Setup
+
+[source,bash]
+----
+# Clone and enter directory
+git clone https://github.com/hyperpolymath/anvomidav-playground.git
+cd anvomidav-playground
+
+# Install dependencies (Deno required per RSR)
+deno task dev
+
+# Run tests
+just test
+
+# Run formal verification
+just verify
+----
+
+== Commit Guidelines
+
+* Conventional commits: `type(scope): description`
+* Sign all commits (DCO required)
+* Atomic, focused commits
+
+== Code Style
+
+* ReScript for application logic (per RSR Language Policy)
+* Deno for runtime (not Node/npm/bun per RSR)
+* Descriptive variable names
+* Full formal specifications for all timing-critical code
+
+== Formal Verification Guidelines
+
+When working with verified code:
+
+* All timing bounds must be formally specified
+* WCET analysis required for all tasks
+* Schedulability must be proven
+* Proofs must be machine-checkable
+
+== Testing
+
+[source,bash]
+----
+# Run all tests
+just test
+
+# Run formal verification
+just verify
+
+# Analyze WCET
+just wcet-analysis
+
+# Check schedulability
+just schedulability
+----
+
+== License
+
+Contributions licensed under AGPL-3.0-or-later.
