@@ -14,30 +14,8 @@
  * - Formal proof obligations
  */
 
-// Time units in microseconds
-type Microseconds = number;
-
-// Timing specification for a real-time task
-interface TimingSpec {
-  wcet: Microseconds;      // Worst-case execution time
-  deadline: Microseconds;  // Task deadline
-  period: Microseconds;    // Task period
-}
-
-// Verified real-time task
-interface VerifiedTask {
-  name: string;
-  timing: TimingSpec;
-  verified: boolean;
-  proofStatus: 'proven' | 'pending' | 'failed';
-}
-
 // Create a timing specification
-function timingSpec(
-  wcetMicroseconds: number,
-  deadlineMicroseconds: number,
-  periodMicroseconds: number
-): TimingSpec {
+function timingSpec(wcetMicroseconds, deadlineMicroseconds, periodMicroseconds) {
   return {
     wcet: wcetMicroseconds,
     deadline: deadlineMicroseconds,
@@ -46,59 +24,51 @@ function timingSpec(
 }
 
 // Verify WCET constraint: WCET <= Deadline
-function verifyWcetDeadline(timing: TimingSpec): boolean {
+function verifyWcetDeadline(timing) {
   const verified = timing.wcet <= timing.deadline;
   console.log(
-    `  WCET(${timing.wcet}us) <= Deadline(${timing.deadline}us): ${verified ? 'VERIFIED' : 'FAILED'}`
+    `  WCET(${timing.wcet}us) <= Deadline(${timing.deadline}us): ${verified ? "VERIFIED" : "FAILED"}`
   );
   return verified;
 }
 
 // Verify deadline constraint: Deadline <= Period
-function verifyDeadlinePeriod(timing: TimingSpec): boolean {
+function verifyDeadlinePeriod(timing) {
   const verified = timing.deadline <= timing.period;
   console.log(
-    `  Deadline(${timing.deadline}us) <= Period(${timing.period}us): ${verified ? 'VERIFIED' : 'FAILED'}`
+    `  Deadline(${timing.deadline}us) <= Period(${timing.period}us): ${verified ? "VERIFIED" : "FAILED"}`
   );
   return verified;
 }
 
 // Calculate utilization for a task
-function taskUtilization(timing: TimingSpec): number {
+function taskUtilization(timing) {
   return timing.wcet / timing.period;
 }
 
 // Rate-Monotonic schedulability test (Liu & Layland bound)
 // For n tasks, schedulable if U <= n * (2^(1/n) - 1)
-function rateMonotonicBound(n: number): number {
+function rateMonotonicBound(n) {
   return n * (Math.pow(2, 1 / n) - 1);
 }
 
 // Verify schedulability of task set
-function verifySchedulability(tasks: VerifiedTask[]): boolean {
+function verifySchedulability(tasks) {
   const n = tasks.length;
-  const totalUtilization = tasks.reduce(
-    (sum, task) => sum + taskUtilization(task.timing),
-    0
-  );
+  const totalUtilization = tasks.reduce((sum, task) => sum + taskUtilization(task.timing), 0);
   const bound = rateMonotonicBound(n);
 
   console.log(`\n  Task set utilization: ${(totalUtilization * 100).toFixed(2)}%`);
   console.log(`  RM bound for ${n} tasks: ${(bound * 100).toFixed(2)}%`);
 
   const schedulable = totalUtilization <= bound;
-  console.log(`  Schedulable: ${schedulable ? 'YES' : 'NO'}`);
+  console.log(`  Schedulable: ${schedulable ? "YES" : "NO"}`);
 
   return schedulable;
 }
 
 // Create a verified task
-function createVerifiedTask(
-  name: string,
-  wcetMicroseconds: number,
-  deadlineMicroseconds: number,
-  periodMicroseconds: number
-): VerifiedTask {
+function createVerifiedTask(name, wcetMicroseconds, deadlineMicroseconds, periodMicroseconds) {
   const timing = timingSpec(wcetMicroseconds, deadlineMicroseconds, periodMicroseconds);
 
   console.log(`\nVerifying task: ${name}`);
@@ -110,52 +80,52 @@ function createVerifiedTask(
     name,
     timing,
     verified,
-    proofStatus: verified ? 'proven' : 'failed',
+    proofStatus: verified ? "proven" : "failed",
   };
 }
 
 // Demonstrate real-time verification
-function demonstrateRealTimeVerification(): void {
-  console.log('=== Anvomidav Playground ===\n');
-  console.log('Demonstrating formally verified real-time systems:\n');
+function demonstrateRealTimeVerification() {
+  console.log("=== Anvomidav Playground ===\n");
+  console.log("Demonstrating formally verified real-time systems:\n");
 
   // Create task set (typical control system)
-  console.log('1. Creating verified task set:');
+  console.log("1. Creating verified task set:");
 
   const sensorTask = createVerifiedTask(
-    'SensorRead',
-    1000,   // 1ms WCET
-    5000,   // 5ms deadline
-    10000   // 10ms period
+    "SensorRead",
+    1000, // 1ms WCET
+    5000, // 5ms deadline
+    10000 // 10ms period
   );
 
   const computeTask = createVerifiedTask(
-    'Compute',
-    10000,  // 10ms WCET
-    40000,  // 40ms deadline
-    50000   // 50ms period
+    "Compute",
+    10000, // 10ms WCET
+    40000, // 40ms deadline
+    50000 // 50ms period
   );
 
   const actuateTask = createVerifiedTask(
-    'Actuate',
-    5000,   // 5ms WCET
-    80000,  // 80ms deadline
-    100000  // 100ms period
+    "Actuate",
+    5000, // 5ms WCET
+    80000, // 80ms deadline
+    100000 // 100ms period
   );
 
   // Verify schedulability
-  console.log('\n2. Verifying schedulability:');
+  console.log("\n2. Verifying schedulability:");
   const tasks = [sensorTask, computeTask, actuateTask];
   const schedulable = verifySchedulability(tasks);
 
   // Summary
-  console.log('\n3. Verification Summary:');
+  console.log("\n3. Verification Summary:");
   for (const task of tasks) {
     console.log(`  ${task.name}: ${task.proofStatus.toUpperCase()}`);
   }
-  console.log(`  Task Set Schedulable: ${schedulable ? 'PROVEN' : 'FAILED'}`);
+  console.log(`  Task Set Schedulable: ${schedulable ? "PROVEN" : "FAILED"}`);
 
-  console.log('\n=== Demo Complete ===');
+  console.log("\n=== Demo Complete ===");
 }
 
 // Run if executed directly
@@ -164,8 +134,6 @@ if (import.meta.main) {
 }
 
 export {
-  TimingSpec,
-  VerifiedTask,
   timingSpec,
   verifyWcetDeadline,
   verifyDeadlinePeriod,
