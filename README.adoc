@@ -1,0 +1,93 @@
+= Anvomidav Playground
+:toc: macro
+:icons: font
+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+image:https://img.shields.io/badge/Language-Anvomidav-blue[Anvomidav]
+image:https://img.shields.io/badge/Focus-Real--Time%20Verified-green[Real-Time]
+image:https://img.shields.io/badge/License-AGPL--3.0-blue[License]
+
+*Playground for Anvomidav - Formally Verified Real-Time Systems Language*
+
+toc::[]
+
+== Overview
+
+Anvomidav is designed for formally verified real-time systems where timing guarantees and correctness proofs are essential.
+
+=== Key Features
+
+* **Formal Verification**: Full program verification
+* **WCET Analysis**: Worst-case execution time bounds
+* **Real-Time Scheduling**: Priority-based scheduling proofs
+* **Deterministic Execution**: No undefined behavior
+
+== Language Design
+
+=== Timing Specifications
+
+[source,anvomidav]
+----
+-- Real-time task with deadline
+@wcet(50us)
+@deadline(100us)
+@period(1ms)
+task ControlLoop:
+    fn execute(sensors: &SensorData) -> ControlOutput:
+        let reading = sensors.read()
+        let output = pid_controller(reading)
+        output
+
+-- Verified timing
+@proves(wcet <= deadline)
+----
+
+=== Formal Proofs
+
+[source,anvomidav]
+----
+-- Formally verified sorting
+@verified
+@ensures(is_sorted(result))
+@ensures(permutation(input, result))
+@ensures(length(result) == length(input))
+fn verified_sort(input: [Int]) -> [Int]:
+    -- Implementation with proof obligations
+    merge_sort(input)
+----
+
+=== Scheduling Analysis
+
+[source,anvomidav]
+----
+-- Task set with schedulability proof
+@schedulable
+task_set ControlSystem:
+    task sensor_read:  period=10ms,  wcet=1ms
+    task compute:      period=50ms,  wcet=10ms
+    task actuate:      period=100ms, wcet=5ms
+
+    -- Prove schedulability under rate-monotonic
+    @proves(rm_schedulable(tasks))
+----
+
+== Getting Started
+
+[source,bash]
+----
+guix install anvomidav
+anvomidav verify system.anv
+anvomidav timing-analysis system.anv
+anvomidav build --target=arm-realtime
+----
+
+== Examples
+
+* `control/` - Control system examples
+* `proofs/` - Formal verification examples
+* `scheduling/` - Real-time scheduling demos
+
+== License
+
+SPDX-License-Identifier: AGPL-3.0-or-later
