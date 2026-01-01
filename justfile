@@ -41,6 +41,10 @@ test-verify:
 test-verbose:
     deno test --allow-read -- --reporter=verbose
 
+# Run schedulability demo (delegates to deno task demo)
+demo:
+    deno task demo
+
 # === Linting and Formatting ===
 
 # Format code
