@@ -1,4 +1,8 @@
 = Anvomidav Playground
+
+image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
+image:https://img.shields.io/badge/Philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
+
 :toc: macro
 :icons: font
 
@@ -6,7 +10,6 @@
 
 image:https://img.shields.io/badge/Language-Anvomidav-blue[Anvomidav]
 image:https://img.shields.io/badge/Focus-Real--Time%20Verified-green[Real-Time]
-image:https://img.shields.io/badge/License-AGPL--3.0-blue[License]
 
 *Playground for Anvomidav - Formally Verified Real-Time Systems Language*
 
