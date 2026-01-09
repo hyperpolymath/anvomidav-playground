@@ -20,7 +20,7 @@
          "Keep all timing tests deterministic (no real clocks)"
          "Document WCET/deadline/period units explicitly"
          "Run 'deno task test' and 'deno task demo' before committing"
-         "Follow existing code patterns in src/main.ts"
+         "Follow existing code patterns in src/main.js"
          "Use formal verification terminology consistently"))
 
     (do-not
@@ -34,7 +34,7 @@
       . ((anchor . "ANCHOR.scm")
          (spec . ".machine_read/SPEC.playground.scm")
          (roadmap . ".machine_read/ROADMAP.f0.scm")
-         (main-entry . "src/main.ts")
+         (main-entry . "src/main.js")
          (demo-entry . "src/demo.ts")
          (example . "examples/01_control_loop.anv")))
 

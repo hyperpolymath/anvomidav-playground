@@ -3,6 +3,7 @@
 
 (define agentic-config
   `((version . "1.0.0")
+    (project . "anvomidav-playground")
     (claude-code
       ((model . "claude-opus-4-5-20251101")
        (tools . ("read" "edit" "bash" "grep" "glob"))
@@ -10,7 +11,12 @@
     (patterns
       ((code-review . "thorough")
        (refactoring . "conservative")
-       (testing . "comprehensive")))
+       (testing . "comprehensive")
+       (verification . "formal")))
     (constraints
-      ((languages . ())
-       (banned . ("typescript" "go" "python" "makefile"))))))
+      ((languages . ("javascript" "scheme"))
+       (banned . ("typescript" "go" "python" "makefile"))))
+    (project-specific
+      ((timing-analysis . "enforce-wcet-bounds")
+       (proofs . "check-all-obligations")
+       (determinism . "required-for-snapshots")))))
