@@ -3,11 +3,20 @@
 
 (define neurosym-config
   `((version . "1.0.0")
+    (project . "anvomidav-playground")
     (symbolic-layer
       ((type . "scheme")
        (reasoning . "deductive")
-       (verification . "formal")))
+       (verification . "formal")
+       (language-specific
+         ((timing . "wcet-bounded")
+          (proofs . "theorem-proving")
+          (semantics . "operational")))))
     (neural-layer
-      ((embeddings . false)
-       (fine-tuning . false)))
-    (integration . ())))
+      ((embeddings . #f)
+       (fine-tuning . #f)
+       (inference . #f)))
+    (integration
+      ((ai-assisted-development . "duet-style")
+       (proof-hints . #t)
+       (code-generation . "conservative")))))

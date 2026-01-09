@@ -6,13 +6,21 @@
     (project . "anvomidav-playground")
     (procedures
       ((build
-         (("setup" . "cargo build")
-          ("test" . "cargo test")
-          ("check" . "cargo check")))
+         (("check" . "deno task check")
+          ("test" . "deno task test")
+          ("fmt" . "deno task fmt")))
        (verify
-         (("wcet" . "cargo run -- --wcet-analysis src/main.anv")
-          ("proofs" . "cargo run -- --verify src/main.anv")))
+         (("wcet" . "deno task verify")
+          ("demo" . "deno task demo")
+          ("tests" . "deno task test")))
        (run
-         (("example" . "cargo run -- examples/control_loop.anv")))))
-    (alerts ())
-    (contacts ())))
+         (("demo" . "just demo")
+          ("verify" . "just verify")))))
+    (alerts
+      ((test-failure . "Tests must pass before commit")
+       (snapshot-mismatch . "Demo output changed - review before updating snapshot")
+       (lint-error . "Code must pass linting before commit")))
+    (contacts
+      ((maintainer . "hyperpolymath")
+       (upstream . "hyperpolymath/anvomidav")
+       (issues . "github.com/hyperpolymath/anvomidav-playground/issues")))))
