@@ -1,0 +1,163 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 hyperpolymath
+#
+# mustfile.toml - Project configuration for anvomidav-playground
+# See: https://github.com/hyperpolymath/mustfile
+
+[project]
+name = "anvomidav-playground"
+version = "0.1.0"
+description = "Playground for formally verified real-time systems"
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/hyperpolymath/anvomidav-playground"
+authors = ["hyperpolymath"]
+
+[project.urls]
+homepage = "https://github.com/hyperpolymath/anvomidav-playground"
+issues = "https://github.com/hyperpolymath/anvomidav-playground/issues"
+upstream = "https://github.com/hyperpolymath/anvomidav"
+
+# Task definitions - delegated to just
+[tasks]
+build = "just build"
+test = "just test"
+lint = "just lint"
+fmt = "just fmt"
+demo = "just demo"
+verify = "just verify"
+check = "just check"
+clean = "just clean"
+
+[tasks.dev]
+command = "just dev"
+description = "Watch for changes and rebuild"
+
+[tasks.wcet-analysis]
+command = "just wcet-analysis"
+description = "Analyze Worst-Case Execution Time"
+
+[tasks.schedulability]
+command = "just schedulability"
+description = "Check Rate-Monotonic schedulability"
+
+# Required files - must exist
+[requirements.files]
+required = [
+    "LICENSE.txt",
+    "README.adoc",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.adoc",
+    "CHANGELOG.adoc",
+    "Justfile",
+    "Mustfile",
+    "deno.json",
+    "src/main.js",
+    "src/demo.ts",
+    "src/verify.js",
+    "test/verify_test.ts",
+    "test/demo_snapshot_test.ts",
+    "ANCHOR.scm",
+    ".machine_read/LLM_SUPERINTENDENT.scm",
+    ".machine_read/SPEC.playground.scm",
+    ".machine_read/ROADMAP.f0.scm"
+]
+
+# Prohibited files - must not exist
+[requirements.files.prohibited]
+patterns = [
+    "Makefile",
+    "makefile",
+    "package.json",
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "bun.lockb",
+    "Dockerfile",
+    "docker-compose.yml",
+    "*.pyc",
+    "__pycache__",
+    "node_modules"
+]
+
+# Content validation
+[requirements.content]
+# All source files must have SPDX headers
+[[requirements.content.patterns]]
+glob = "src/*.js"
+must_contain = ["SPDX-License-Identifier"]
+
+[[requirements.content.patterns]]
+glob = "src/*.ts"
+must_contain = ["SPDX-License-Identifier"]
+
+[[requirements.content.patterns]]
+glob = "*.scm"
+must_contain = ["SPDX-License-Identifier"]
+
+# License file validation
+[[requirements.content.patterns]]
+glob = "LICENSE.txt"
+must_contain = ["GNU AFFERO GENERAL PUBLIC LICENSE"]
+
+# Enforcement rules
+[enforcement]
+license = "AGPL-3.0-or-later"
+line_endings = "unix"
+max_line_length = 100
+indent_style = "spaces"
+indent_size = 2
+
+[enforcement.language_policy]
+allowed = ["JavaScript", "Scheme", "AsciiDoc", "Markdown", "Shell", "Just", "TOML", "Nickel"]
+prohibited = ["TypeScript", "Go", "Python", "Makefile"]
+# Note: TypeScript (.ts) files are allowed via Deno which handles them natively
+
+[enforcement.runtime]
+primary = "deno"
+prohibited = ["node", "npm", "bun", "yarn", "pnpm"]
+
+# Real-time verification constraints
+[verification]
+deterministic_output = true
+network_dependency = false
+real_time_dependency = false
+
+[verification.wcet]
+units = "microseconds"
+bound_checking = true
+
+[verification.schedulability]
+policy = "rate-monotonic"
+utilization_bound = "liu-layland"
+
+# Templates for generating new files
+[templates.scenario]
+description = "Generate a new schedulability scenario"
+output = "examples/{{name}}.scenario.ts"
+template = """
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Scenario: {{name}}
+
+import type { Scenario } from '../src/demo.ts';
+
+export const {{name}}: Scenario = {
+  id: '{{id}}',
+  name: '{{display_name}}',
+  description: '{{description}}',
+  tasks: [
+    // Add tasks here
+  ],
+};
+"""
+
+# CI/CD settings
+[ci]
+required_checks = ["test", "lint", "verify", "demo"]
+branch_protection = true
+require_signed_commits = false
+
+# Container settings (if needed in future)
+[container]
+runtime = "podman"
+registry = "ghcr.io/hyperpolymath"
